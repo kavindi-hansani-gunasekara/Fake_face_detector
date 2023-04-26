@@ -1,0 +1,26 @@
+.Navbar-container {
+  height: 8vh;
+  background-color: #a6a6a6;
+  font-family: "Inter";
+  display: flex;
+  align-items: center;
+}
+.logo-nav{
+    width: 150px;
+    display: flex;
+    padding-left: 50px;
+}
+
+.nav {
+  font-weight: 600;
+  width: 100px;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+.nav:hover {
+  color: white;
+}
+.logo {
+  height: 50px;
+}

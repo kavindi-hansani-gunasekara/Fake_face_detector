@@ -1,0 +1,19 @@
+.Footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #666666;
+    color: white;
+    height: 7vh;
+    display: flex;
+    font-family: "Inter";
+    font-style: italic;
+    font-weight: 400;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 10px;
+ }
+ .copy{
+     margin-right: 25px;
+ }
