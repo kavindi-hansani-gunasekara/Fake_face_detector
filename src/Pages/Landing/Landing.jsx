@@ -20,7 +20,16 @@ const Landing = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState("");
   const [showAlert, setShowAlert] = useState("");
-  const [url, setUrl] = useState(null)
+  const [url, setUrl] = useState(null);
+  const [isFake, setIsFake] = useState(false);
+  const [confidence, setConfidence] = useState(null);
+
+  const handleReset = ()=>{
+    setIsFake(false);
+    setConfidence(null);
+    setViewResult(false);
+    setSelectedImage(null);
+  }
   const input = useRef(null);
   const handleInput = (e) => {
     if(e.target.files[0])
@@ -166,11 +175,7 @@ const Landing = () => {
             </div>          
             <div
               className="generate"
-              onClick={() => {
-                setViewResult(false);
-                setSelectedImage(null);
-          
-              }}
+              onClick={handleReset}
             >
               Back to Home
             </div>
