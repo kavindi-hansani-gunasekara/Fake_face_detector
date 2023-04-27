@@ -43,8 +43,8 @@ const Landing = () => {
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
   };
  
-  const handleSubmit = () => {
-    
+  const handleSubmit = (e) => {
+    e.preventDefault();
     const storageRef = ref(storage, `input/${selectedImage.name}`);
     uploadBytes (storageRef, selectedImage).then(()=>{
       getDownloadURL(storageRef).then((url)=>{
@@ -56,7 +56,17 @@ const Landing = () => {
     })
     setIsGenerating(true);
   }
- 
+
+  const handleResults = async () => {
+    const res = await axios.post("http://192.168.1.35:5000/predictImage",
+    {
+      name : selectedImage.name
+    }
+    )
+    setViewResult(true);
+    setIsGenerating(true);
+    console.log(res.data);
+  }
 
   const contentOne = () => {
     return (
@@ -105,12 +115,7 @@ const Landing = () => {
             { isGenerating ? (
                 <div
                 className="view-btn"
-                onClick={() => {
-                  if (selectedImage) {
-                    setViewResult(true);
-                    setIsGenerating(true);
-                  }
-                }}
+                onClick={handleResults}
               >
                 View Results
               </div> ) : 
