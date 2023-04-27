@@ -19,16 +19,22 @@ const Landing = () => {
   const [viewReult, setViewResult] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState("");
-  const [showAlert, setShowAlert] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
   const [url, setUrl] = useState(null);
-  const [isFake, setIsFake] = useState(false);
+  const [status, setStatus] = useState(null);
   const [confidence, setConfidence] = useState(null);
+  const [isGetting, setIsGetting] = useState(false);
+  const [downloadUrl, setDownloadUrl] = useState(null);
 
   const handleReset = ()=>{
-    setIsFake(false);
+    setStatus(null);
     setConfidence(null);
     setViewResult(false);
     setSelectedImage(null);
+    setShowAlert(false);
+    setIsGetting(false);
+    setDownloadUrl(null);
+    
   }
   const input = useRef(null);
   const handleInput = (e) => {
@@ -67,14 +73,34 @@ const Landing = () => {
   }
 
   const handleResults = async () => {
+    setIsGetting(true)
     const res = await axios.post("http://192.168.1.35:5000/predictImage",
     {
       name : selectedImage.name
     }
     )
+    setIsGetting(false)
     setViewResult(true);
+    setConfidence(res.data.confidence)
     setIsGenerating(true);
     console.log(res.data);
+    if(res.data.isFake === "fake"){
+      setStatus("danger");
+      const storageRef = ref(storage, `ouputimages/${selectedImage.name}`);
+      getDownloadURL(storageRef).then((x)=>{
+        setDownloadUrl(x);
+        console.log(x,"X")
+      })
+    }
+    else{
+      const storageRef = ref(storage, `inputimages/${selectedImage.name}`);
+      getDownloadURL(storageRef).then((x)=>{
+        setDownloadUrl(x);
+      })
+      setStatus("success");
+    }
+    setShowAlert(true)
+
   }
 
   const contentOne = () => {
@@ -152,11 +178,7 @@ const Landing = () => {
           <div className="image-container">
             <img
               alt=""
-              src={
-                generatedImage === ""
-                  ? URL.createObjectURL(selectedImage)
-                  : generatedImage
-              }
+              src={downloadUrl}
               className="image"
             />
           </div>
@@ -172,6 +194,10 @@ const Landing = () => {
             <div className="details">
               <div className="type">Size :</div>
               <div className="value">{formatBytes(selectedImage.size)}</div>
+            </div>
+            <div className="details">
+              <div className="type">Confidence :</div>
+              <div className="value">{confidence}</div>
             </div>          
             <div
               className="generate"
@@ -181,13 +207,14 @@ const Landing = () => {
             </div>
           </div>
         </div>
-        {showAlert ? <Alert type="success" /> : ""}
+        {showAlert ? <Alert type={status} /> : ""}
       </div>
     );
   };
   const contentToShow = () => {
     return viewReult ? contentTwo() : contentOne();
   };
+  
   const getLoader = () => {
     return (
       <div className="loading-wrapper">
@@ -211,7 +238,7 @@ const Landing = () => {
   return (
     <div className="landing-page">
       <Navbar />
-      {contentToShow()}
+      {isGetting? getLoader(): contentToShow()}
       <Footer />
       
     </div>

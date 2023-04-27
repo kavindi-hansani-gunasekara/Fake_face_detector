@@ -10,7 +10,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: auto;
+  position: fixed;
+  bottom: 50px;
+  left: 50%;
 }
 .danger{
     width: 40%;
@@ -24,5 +26,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: auto;
+   
+    position: fixed;
+    bottom: 50px;
+    left: 50%;
 }
