@@ -6,23 +6,29 @@ import detect from "../../Images/detect.png";
 import answer from "../../Images/answer.png";
 import arrow from "../../Images/arrow.png";
 import photo from "../../Images/photo.jpg";
+import { storage } from '../../Config/Firebase';
+import { ref, getDownloadURL, uploadBytesResumable, uploadBytes } from "firebase/storage";
+
 
 import "./Landing.css";
 import Alert from "../../Components/Alert/Alert";
 
 const Landing = () => {
-  const [selectedImage, setSelectedImage] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [image, setImage] = useState(null);
   const [viewReult, setViewResult] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState("");
   const [showAlert, setShowAlert] = useState("");
-
+  const [url, setUrl] = useState(null)
   const input = useRef(null);
   const handleInput = (e) => {
-    setSelectedImage(e.target.files);
+    if(e.target.files[0])
+    setSelectedImage(e.target.files[0]);
   };
   const onlickImage = () => {
     input.current.click();
+    setIsGenerating(false)
   };
   const formatBytes = (bytes) => {
     let decimals = 2;
@@ -36,6 +42,22 @@ const Landing = () => {
 
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
   };
+ 
+  const handleSubmit = () => {
+    
+    const storageRef = ref(storage, `input/${selectedImage.name}`);
+    uploadBytes (storageRef, selectedImage).then(()=>{
+      getDownloadURL(storageRef).then((url)=>{
+        setUrl(url);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      })
+    })
+    setIsGenerating(true);
+  }
+ 
+
   const contentOne = () => {
     return (
       <div className="Landing-container">
@@ -75,21 +97,35 @@ const Landing = () => {
                 Choose File
               </label>
               <span id="file-chosen" className="selected-img">
-                {selectedImage.length === 0
+                {!selectedImage
                   ? "No file chosen"
-                  : selectedImage[0].name}
+                  : selectedImage.name}
               </span>
             </div>
-            <div
-              className="view-btn"
-              onClick={() => {
-                if (selectedImage.length !== 0) {
-                  setViewResult(true);
-                }
-              }}
-            >
-              View Result
-            </div>
+            { isGenerating ? (
+                <div
+                className="view-btn"
+                onClick={() => {
+                  if (selectedImage) {
+                    setViewResult(true);
+                    setIsGenerating(true);
+                  }
+                }}
+              >
+                View Results
+              </div> ) : 
+
+              (
+                <div
+                  className="view-btn"
+                onClick={handleSubmit}
+                >
+                Upload
+                </div>
+              )
+
+            }
+    
           </div>
         </div>
       </div>
@@ -104,7 +140,7 @@ const Landing = () => {
               alt=""
               src={
                 generatedImage === ""
-                  ? URL.createObjectURL(selectedImage[0])
+                  ? URL.createObjectURL(selectedImage)
                   : generatedImage
               }
               className="image"
@@ -113,28 +149,25 @@ const Landing = () => {
           <div className="image-details">
             <div className="details">
               <div className="type">Type :</div>
-              <div className="value">{selectedImage[0].type.split("/")[1]}</div>
+              <div className="value">{selectedImage.type.split("/")[1]}</div>
             </div>
             <div className="details">
               <div className="type">Name :</div>
-              <div className="value">{selectedImage[0].name}</div>
+              <div className="value">{selectedImage.name}</div>
             </div>{" "}
             <div className="details">
               <div className="type">Size :</div>
-              <div className="value">{formatBytes(selectedImage[0].size)}</div>
-            </div>
+              <div className="value">{formatBytes(selectedImage.size)}</div>
+            </div>          
             <div
               className="generate"
               onClick={() => {
-                setIsGenerating(true);
-                setTimeout(() => {
-                  setIsGenerating(false);
-                  setGeneratedImage(photo);
-                  setShowAlert(true)
-                }, 3000);
+                setViewResult(false);
+                setSelectedImage(null);
+          
               }}
             >
-              Generate Image
+              Back to Home
             </div>
           </div>
         </div>
@@ -170,7 +203,7 @@ const Landing = () => {
       <Navbar />
       {contentToShow()}
       <Footer />
-      {isGenerating ? getLoader() : ""}
+      
     </div>
   );
 };

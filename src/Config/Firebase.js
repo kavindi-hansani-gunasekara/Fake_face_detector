@@ -1,4 +1,7 @@
-import  firebase from "firebase";
+import { initializeApp } from "firebase/app";
+import { getStorage } from "firebase/storage";
+
+
 
 
 const firebaseConfig = {
@@ -12,10 +15,8 @@ const firebaseConfig = {
     measurementId: "G-EX9ZN2RGXT"
   }
 
-const firebaseApp = firebase.initializeApp(firebaseConfig);
-const db = firebaseApp.firestore();
-const storage = firebase.storage(); 
+export const app = initializeApp(firebaseConfig);
+export const storage = getStorage(app); 
 
 
-export { storage };
-export default db;
+
