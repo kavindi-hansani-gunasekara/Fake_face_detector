@@ -8,7 +8,7 @@ import arrow from "../../Images/arrow.png";
 import photo from "../../Images/photo.jpg";
 import { storage } from '../../Config/Firebase';
 import { ref, getDownloadURL, uploadBytesResumable, uploadBytes } from "firebase/storage";
-
+import axios from 'axios';
 
 import "./Landing.css";
 import Alert from "../../Components/Alert/Alert";
