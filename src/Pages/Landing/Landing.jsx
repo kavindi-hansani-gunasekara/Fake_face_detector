@@ -86,23 +86,37 @@ const Landing = () => {
     console.log(res.data);
     if(res.data.isFake === "fake"){
       setStatus("danger");
-      const storageRef = ref(storage, `ouputimages/${selectedImage.name}`);
-      getDownloadURL(storageRef).then((x)=>{
-        setDownloadUrl(x);
-        console.log(x,"X")
-      })
+    
     }
     else{
-      const storageRef = ref(storage, `inputimages/${selectedImage.name}`);
-      getDownloadURL(storageRef).then((x)=>{
-        setDownloadUrl(x);
-      })
+   
       setStatus("success");
     }
     setShowAlert(true)
 
   }
 
+  const handleShowImage = async (e) => {
+    e.preventDefault();
+    const storageRef = ref(storage, `inputimages/${selectedImage.name}`);
+    if(status === "danger"){
+      const instorageRef = ref(storage, `outputimages/${selectedImage.name}`);
+      await getDownloadURL(instorageRef).then((url) => {
+        console.log(url)
+        setDownloadUrl(url)
+      });
+    }
+    else{
+  
+      await getDownloadURL(storageRef).then((url) => {
+        console.log(url);
+        setDownloadUrl(url)
+      });
+      
+    }
+    
+    
+  }
   const contentOne = () => {
     return (
       <div className="Landing-container">
@@ -198,7 +212,13 @@ const Landing = () => {
             <div className="details">
               <div className="type">Confidence :</div>
               <div className="value">{confidence}</div>
-            </div>          
+            </div> 
+            <div
+              className="generate"
+              onClick={handleShowImage}
+            >
+              Show Image
+            </div>         
             <div
               className="generate"
               onClick={handleReset}
