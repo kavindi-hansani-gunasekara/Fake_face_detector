@@ -74,7 +74,7 @@ const Landing = () => {
 
   const handleResults = async () => {
     setIsGetting(true)
-    const res = await axios.post("http://192.168.1.35:5000/predictImage",
+    const res = await axios.post("http://3.27.147.102:5000/predictImage",
     {
       name : selectedImage.name
     }

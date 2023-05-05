@@ -5,15 +5,15 @@ import { getStorage } from "firebase/storage";
 
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBEiHDEwdMwzOq1dZLgGXa06ds0xxryies",
-    authDomain: "fakefacepredict-bd648.firebaseapp.com",
-    databaseURL: "https://fakefacepredict-bd648-default-rtdb.firebaseio.com",
-    projectId: "fakefacepredict-bd648",
-    storageBucket: "fakefacepredict-bd648.appspot.com",
-    messagingSenderId: "930399145413",
-    appId: "1:930399145413:web:d08ef2e4595f1c36270fac",
-    measurementId: "G-EX9ZN2RGXT"
-  }
+  apiKey: "AIzaSyDogBZbQ9BhWn2rMSXstS63pU05G6UP8lQ",
+  authDomain: "face-fake-5b4dc.firebaseapp.com",
+  databaseURL: "https://face-fake-5b4dc-default-rtdb.firebaseio.com",
+  projectId: "face-fake-5b4dc",
+  storageBucket: "face-fake-5b4dc.appspot.com",
+  messagingSenderId: "584362847394",
+  appId: "1:584362847394:web:be7554fe0ede92ee337bfb",
+  measurementId: "G-2CRHKT3CWG"
+};
 
 export const app = initializeApp(firebaseConfig);
 export const storage = getStorage(app); 
